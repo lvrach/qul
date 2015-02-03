@@ -1,0 +1,24 @@
+{
+  "name": "qul",
+  "version": "0.0.1",
+  "description": "query tool",
+  "bin": {
+    "qul": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lvrach/qul.git"
+  },
+  "dependencies": {
+    "cli-chart": "^0.3.1",
+    "copy-paste": "^1.0.1",
+    "hiredis": "^0.1.17",
+    "redis": "^0.12.1"
+  },
+  "preferGlobal": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lvrach",
+  "license": "Apache 2.0"
+}
