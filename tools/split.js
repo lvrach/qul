@@ -4,17 +4,17 @@ exports.help = '';
 
 exports.pipeWorker = function (feedIn, feedOut, seperator) {
 		
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		meta.fields = [];
 		
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {
-			feedOut.write(line[0].split(seperator));
+		streamIn.on('line', function (line) {
+			streamOut.write(line[0].split(seperator));
 		});
 
-		feedIn.on('end', function () {
-			feedOut.end();
+		streamIn.on('end', function () {
+			streamOut.end();
 		});
 	});
 }

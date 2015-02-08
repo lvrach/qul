@@ -4,24 +4,26 @@ exports.help = '';
 
 exports.pipeWorker = function(feedIn, feedOut, number) {
 	number || (number = 5);
-		
-	feedIn.on('start', function (meta) {
+	
+	console.log(feedIn, feedOut);
+
+	feedIn.on('start', function (meta, streamIn) {
 		var lastLines = [];
 
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			lastLines.push(line);
 			if ( lastLines.length > number ) {
 				lastLines.shift();
 			}
 		});
 		
-		feedIn.on('end', function () {
+		streamIn.on('end', function () {
 			lastLines.forEach( function (line) {
-				feedOut.write(line);
+				streamOut.write(line);
 			});
-			feedOut.end();
+			streamOut.end();
 		});
 	});
 }

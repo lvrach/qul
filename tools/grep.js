@@ -3,17 +3,17 @@ exports.name = 'grep';
 exports.help = '';
 
 exports.pipeWorker = function(feedIn, feedOut, text) {
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			if ( line.join(' ').indexOf(text) >= 0 ) {
-				feedOut.write(line);
+				streamOut.write(line);
 			}
 		});
-		feedIn.on('end', function () {
-			feedOut.end();
+		streamIn.on('end', function () {
+			streamOut.end();
 		});
 	
 	});

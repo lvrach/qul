@@ -5,9 +5,9 @@ exports.help = '';
 exports.pipeWorker = function(feedIn, feedOut, field) {
 	var Chart = require('cli-chart');
 	
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
 		var chart = new Chart({
 		    xlabel: 'count',
@@ -22,19 +22,19 @@ exports.pipeWorker = function(feedIn, feedOut, field) {
 		var max=0;
 		var min;
 		var data = [];
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			max = Math.max(max, line[field]);
 			min = Math.min(min, line[field]);
 			data.push(line[field]);
-			feedOut.write(line);
+			streamOut.write(line);
 		});
-		feedIn.on('end', function () {
+		streamIn.on('end', function () {
 
 			data.forEach( function (value) {
 				chart.addBar(Math.max(1,80*(value/max)));
 			});
 			chart.draw();
-			feedOut.end();
+			streamOut.end();
 		});
 
 	});

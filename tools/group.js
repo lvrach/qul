@@ -7,9 +7,7 @@ exports.pipeWorker = function(feedIn, feedOut, fields) {
 	fields = [].concat(fields);
 	field = fields[0];
 
-
-
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		var groups = {};
 		
 		var newFields = [field, field + '_count'];
@@ -20,9 +18,9 @@ exports.pipeWorker = function(feedIn, feedOut, fields) {
 
 		meta.fields = newFields;
 
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			if ( line[field] in groups ) {
 				groups[line[field]]++;
 			}
@@ -30,11 +28,11 @@ exports.pipeWorker = function(feedIn, feedOut, fields) {
 				groups[line[field]]=1;
 			}
 		});
-		feedIn.on('end', function() {
+		streamIn.on('end', function() {
 			for ( var group in groups ) {
-				feedOut.write([group, groups[group]]);
+				streamOut.write([group, groups[group]]);
 			}			
-			feedOut.end();
+			streamOut.end();
 		});
 
 	});

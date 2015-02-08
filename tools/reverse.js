@@ -4,19 +4,19 @@ exports.help = '';
 
 exports.pipeWorker = function(feedIn, feedOut) {
 	
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		var lines = [];
 		
-		feedOut.start(meta);
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {		
+		streamIn.on('line', function (line) {		
 			lines.push(line);
 		});
-		feedIn.on('end', function () {
+		streamIn.on('end', function () {
 			lines.reverse().forEach( function (line) {
-				feedOut.write(line);
+				streamOut.write(line);
 			});
-			feedOut.end();
+			streamOut.end();
 		});
 	});
 }

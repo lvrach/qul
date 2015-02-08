@@ -7,17 +7,16 @@ exports.pipeWorker = function(feedIn, feedOut, joiner) {
 
 	joiner || (joiner = '\t');
 	
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		var lines = [];
 
-		feedIn.start(meta);
-
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			lines.push(line.join(joiner));
 		});
 		
-		feedIn.on('end', function () {
+		streamIn.on('end', function () {
 			clipboard.copy(lines.join('\n'));
+			console.log('copy to clipboard');
 		});
 	});
 }

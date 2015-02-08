@@ -5,21 +5,23 @@ exports.help = '';
 exports.pipeWorker = function(feedIn, feedOut, number) {
 	number || (number = 5);
 	
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		var count = 0;
 		
-		feedOut.start(meta);
-		
-		feedIn.on('line', function (line) {
+		var streamOut = feedOut.start(meta);
+
+		streamIn.on('line', function (line) {
 			count++;
 			if ( count > number ) {
 				return;
 			}
-			feedOut.write(line);
+			streamOut.write(line);
 		});
 		
-		feedIn.on('end', function () {
-			feedOut.end();
+		streamIn.on('end', function () {
+			console.log(streamOut == streamIn);
+
+			streamOut.end();
 		});
 	});
 }

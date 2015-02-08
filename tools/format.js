@@ -17,19 +17,20 @@ exports.pipeWorker = function (feedIn, feedOut, format) {
 		regExp = format;
 	}
 
-	feedIn.on('start', function (meta) {
+	feedIn.on('start', function (meta, streamIn) {
 		meta.fields = fieldNames;
-		feedOut.start(meta);
+		
+		var streamOut = feedOut.start(meta);
 
-		feedIn.on('line', function (line) {
+		streamIn.on('line', function (line) {
 			var match = line[0].match(regExp);
 			if (match && match.shift()) {
-				feedOut.write(match);
+				streamOut.write(match);
 			}
 		});
 
-		feedIn.on('end', function () {
-			feedOut.end();
+		streamIn.on('end', function () {
+			streamOut.end();
 		});
 	});
 }

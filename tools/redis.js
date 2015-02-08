@@ -5,7 +5,7 @@ exports.help = '';
 exports.pipeWorker =  function(feedIn, feedOut, key) {
     var redis = require('redis').createClient();
 
-    feedOut.start({fields: []});
+    var streamOut = feedOut.start({fields: []});
 
     redis.lrange(key, 0, -1, function (err, list) {
     	if (err) {
@@ -17,8 +17,8 @@ exports.pipeWorker =  function(feedIn, feedOut, key) {
 	    	return;
     	}
     	list.forEach(function (item) {
-    		feedOut.write([item]);
+    		streamOut.write([item]);
     	});
-    	feedOut.end();
+    	streamOut.end();
     });
 }
